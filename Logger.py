@@ -70,12 +70,18 @@ class Logs:
         self._managed_loggers.add(self.main_logger)
 
     def _make_handler(self, path: str) -> logging.Handler:
-        """Create a FileHandler (or RotatingFileHandler when rotation is enabled)."""
+        """Create a FileHandler (or RotatingFileHandler when rotation is enabled).
+
+        ``delay=True`` defers opening the file until the first record is
+        emitted, so merely constructing ``Logs`` never touches the filesystem
+        (avoids stray/permission-denied files, e.g. after a read-only install).
+        """
         if self.use_rotation:
             return logging.handlers.RotatingFileHandler(
-                path, maxBytes=self.max_bytes, backupCount=self.backup_count
+                path, maxBytes=self.max_bytes, backupCount=self.backup_count,
+                delay=True,
             )
-        return logging.FileHandler(path)
+        return logging.FileHandler(path, delay=True)
 
     @staticmethod
     def _clear_handlers(logger: logging.Logger) -> None:
@@ -91,7 +97,10 @@ class Logs:
             path += ".log"
 
         if not os.path.isabs(path):
-            path = os.path.join(os.path.dirname(__file__), path)
+            # Resolve against the current working directory, NOT the module
+            # install dir, so logs land where the app runs instead of inside
+            # site-packages (which is often read-only after `pip install`).
+            path = os.path.join(os.getcwd(), path)
 
         directory = os.path.dirname(path)
         if directory:
@@ -106,7 +115,9 @@ class Logs:
         if os.path.isabs(folder_name):
             full_path = os.path.join(folder_name, file_name)
         else:
-            base_dir = os.path.dirname(os.path.abspath(__file__))
+            # Resolve relative folders against the current working directory,
+            # NOT the module install dir (see resolve_log_path).
+            base_dir = os.getcwd()
             full_path = os.path.join(base_dir, folder_name, file_name)
 
         directory = os.path.dirname(full_path)

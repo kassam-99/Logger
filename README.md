@@ -46,8 +46,9 @@ Routing rules:
 
 - `Logs` class wrapping stdlib `logging` — no third-party runtime deps.
 - Five levels: DEBUG, INFO, WARNING, ERROR, CRITICAL (via `LEVEL_MAP`).
-- Automatic path resolution: relative paths resolve against the module dir; a
-  `.log` extension is appended if missing; parent directories are created.
+- Automatic path resolution: relative paths resolve against the current working
+  directory; a `.log` extension is appended if missing; parent directories are
+  created. Handlers use `delay=True`, so no file is opened until the first write.
 - A default "main" fallback logger plus per-call folder/file targeting.
 - A named "engine" logger via `LogEngine`.
 - ANSI-clean files: an `AnsiStrippingFormatter` removes color escape codes from
@@ -61,10 +62,14 @@ Routing rules:
 ## Quickstart
 
 ```bash
-pip install -r requirements.txt      # rich (optional UI) + pytest
-python3 dashboard.py                  # interactive menu loop
+python3 dashboard.py                  # interactive menu loop (stdlib only)
 python3 dashboard.py --demo           # scripted, non-interactive showcase
+pip install -r requirements.txt       # optional: `rich` for the prettier UI
 ```
+
+The core library and dashboard run on the standard library alone; installing
+`rich` (via `requirements.txt` or `pip install .[ui]`) only upgrades the
+dashboard's appearance.
 
 The dashboard is EOF/pipe-safe: `python3 dashboard.py < /dev/null` prints a
 banner + status and exits promptly instead of blocking.
@@ -163,11 +168,12 @@ Running `python3 Logger.py` with no arguments runs a short built-in demo.
 ## Testing
 
 ```bash
+pip install pytest          # not in requirements.txt; or: pip install .[dev]
 python3 -m pytest -q
 ```
 
-Currently **17 passing** (14 library tests + 3 dashboard tests covering
-`--demo` exit 0, EOF/pipe safety, and `--help`).
+The suite covers the library plus the dashboard (`--demo` exit 0, EOF/pipe
+safety, and `--help`).
 
 ## Project layout
 
@@ -177,7 +183,7 @@ Logger/
 ├── dashboard.py        # branded CLI cockpit (interactive + --demo)
 ├── test_logger.py      # library tests
 ├── test_dashboard.py   # dashboard subprocess tests
-├── requirements.txt    # rich (optional) + pytest
+├── requirements.txt    # optional `rich` for the dashboard UI
 ├── pyproject.toml      # packaging + pytest config
 ├── docs/
 │   └── screenshots/    # drop dashboard screenshots here
@@ -196,7 +202,7 @@ at runtime and are intentionally git-ignored — they are never committed.
 
 ## Requirements / optional dependencies
 
-- **Core library:** Python 3.9+ standard library only — no third-party deps.
+- **Core library:** Python 3.10+ standard library only — no third-party deps.
 - **Dashboard UI:** [`rich`](https://pypi.org/project/rich/) is optional. If it
   is importable the dashboard uses panels/tables/colored prompts; otherwise it
   falls back to clean plain-ANSI output.

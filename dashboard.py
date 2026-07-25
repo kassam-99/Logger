@@ -347,7 +347,7 @@ def action_where() -> None:
         print(f"  Main fallback : {main_path}")
         print(f"  Engine logger : {sample_engine}")
         print(f"  Direct target : {sample_custom}")
-    out("Rules: relative paths resolve against the module dir; a `.log`")
+    out("Rules: relative paths resolve against the current working dir; a `.log`")
     out("extension is appended if missing; parent directories are created.")
 
 
