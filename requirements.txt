@@ -1,0 +1,6 @@
+# Logger's core library has NO third-party runtime dependencies -- it uses only
+# the Python standard library (logging, os, argparse, typing).
+
+# Optional: nicer dashboard UI. The dashboard auto-detects `rich` and falls
+# back to plain ANSI if it is not installed.
+rich>=13.0

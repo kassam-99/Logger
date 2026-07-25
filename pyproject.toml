@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "kd-logger"
+version = "1.0.0"
+description = "A small, reusable logging utility wrapping the standard library: per-component log files, auto path handling, level routing, and an optional console echo."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "Kassam Dakhlalah" }]
+keywords = ["logging", "logger", "utility", "stdlib"]
+dependencies = []
+
+[project.optional-dependencies]
+ui = ["rich>=13.0"]
+dev = ["pytest>=7.0", "rich>=13.0"]
+
+[project.scripts]
+kd-logger-demo = "dashboard:main"
+
+[tool.setuptools]
+py-modules = ["Logger", "dashboard"]
+
+[tool.pytest.ini_options]
+addopts = "-q"

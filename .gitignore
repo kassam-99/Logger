@@ -1,0 +1,48 @@
+# --- Byte-compiled / optimized ---
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# --- Test / type / lint caches ---
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+.tox/
+
+# --- Packaging / build ---
+build/
+dist/
+wheels/
+*.egg-info/
+.eggs/
+
+# --- Virtual environments ---
+.venv/
+venv/
+env/
+ENV/
+
+# --- Runtime log output / generated dirs (never commit) ---
+*.log
+logs/
+CustomLogs/
+ExampleLogger/
+Logs_Terminal/
+*.tmp
+*.spool
+
+# --- Secrets / local env ---
+.env
+*.local
+
+# --- OS / editor / IDE workspace files ---
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.code-workspace
+*.swp
+*~
